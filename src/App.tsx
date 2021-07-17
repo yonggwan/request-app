@@ -1,23 +1,15 @@
 import React from 'react';
+import RequestContainer from './containers/Request';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="app-container">
+      <h1 className="app-name">
+        <span>soomgo</span>
+        <img src="https://static.cdn.soomgo.com/static/img/home/index_soomgo_logo.svg" alt="Soomgo" />
+      </h1>
+      <RequestContainer />
     </div>
   );
 }
