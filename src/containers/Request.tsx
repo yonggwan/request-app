@@ -14,7 +14,17 @@ const Reqeust = () => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <h2 className={classes.pageTitle}>Multi step form</h2>
+      <h2 className={classes.pageTitle}>전문가에게 의뢰하기</h2>
+      <form action="/" method="post">
+        <fieldset>
+          <legend>item.title</legend>
+          inputs
+        </fieldset>
+        <fieldset>
+          <legend>item.title</legend>
+          inputs
+        </fieldset>
+      </form>
     </div>
   );
 }
