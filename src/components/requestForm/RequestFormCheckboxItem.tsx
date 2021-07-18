@@ -3,24 +3,28 @@ import { RequestFormItemParam } from "../../models/RequestForm";
 
 interface RequestFormItemProps {
   item: RequestFormItemParam;
-  selectedOptionIds: number[];
-  onChange(itemOptionIds: number[]): void;
+  selectedOptionIds: Set<number>
+  onChange(itemOptionIds: Set<number>): void;
 }
 
-const RequestFormCheckboxItem = ({ item, selectedOptionIds }: RequestFormItemProps) => {
-  const handleChange = (event: any) => {
-    console.log('RequestFormCheckboxItem@handleChange', event.target);
+const RequestFormCheckboxItem = ({ item, selectedOptionIds, onChange }: RequestFormItemProps) => {
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('RequestFormCheckboxItem@handleChange', event);
+    const value: number = Number(event.target.value);
+    onChange(event.target.checked ? selectedOptionIds.add(value): selectedOptionIds.add(value));
   };
   
   return (
-    <div onChange={handleChange}>
+    <div>
       <p>{item.title}</p>
       {item.options.map(option => (
         <label key={option.id}>
           <input
             type="checkbox"
             value={option.id}
-            checked={selectedOptionIds.includes(option.id)}
+            onChange={handleChange}
+            checked={selectedOptionIds.has(option.id)}
             data-item-id={item.itemId} 
             data-option-id={option.id} 
           />

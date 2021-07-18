@@ -20,7 +20,7 @@ const useStyles = createUseStyles({
 const Reqeust = () => {
   const classes = useStyles();
   const [reqeustForm, setReqeustForm] = React.useState<RequestFormModel>();
-  const [selectedRequestFormItemIds, setSelectedRequestFormItemsIds] = React.useState([]);
+  const [selectedRequestFormItemIds, setSelectedRequestFormItemsIds] = React.useState(new Set<number>());
   const [currentRequestFormStepIdx, setCurrentRequestFormStepIdx] = React.useState<number>(0);
   const requestFormItemLength: number = reqeustForm ? reqeustForm.items.length : 0;
   const isLastRequestFormStep: boolean = currentRequestFormStepIdx === (requestFormItemLength - 1);
@@ -40,8 +40,10 @@ const Reqeust = () => {
     },
   }
   
-  const handleFormChange = (itemId: number, optionIds: number[]) => {
+  const handleFormChange = (itemId: number, optionIds: Set<number>) => {
     console.log('Request@handleFormChange', {itemId, optionIds});
+    // todos... 
+    // setSelectedRequestFormItemsIds? ? ? ?? ?  ? ? ? ? ?(optionIds);
   };
   
   const handleFormSubmit = (event: React.FormEvent) => {

@@ -5,13 +5,13 @@ import RequestFormSelectItem from './RequestFormSelectItem';
 
 interface RequestFormItemProps {
   item: RequestFormItemParam;
-  selectedOptionIds: number[];
-  onChange(itemOptionIds: number[]): void;
+  selectedOptionIds: Set<number>;
+  onChange(itemOptionIds: Set<number>): void;
 }
 
-const RequestFormStep = ({ item, selectedOptionIds }: RequestFormItemProps) => {
-  const handleCheckboxChange = () => {};
-  const handleSelectChange = () => {};
+const RequestFormStep = ({ item, selectedOptionIds, onChange }: RequestFormItemProps) => {
+  const handleCheckboxChange = onChange;
+  const handleSelectChange = onChange;
   
   return (
     <fieldset key={item.itemId}>
