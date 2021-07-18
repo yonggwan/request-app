@@ -1,0 +1,22 @@
+declare type APIResponse<P> = APIResponseSuccess<P> | APIResponseFailure<P>;
+
+type APIResponseSuccess<P> = {
+  code: number;
+  success: true;
+  data: P;
+};
+
+type APIResponseFailure<P> = {
+  code: number;
+  success: false;
+  alertMessage: string;
+  data?: P;
+};
+
+export interface HTTPClientConstructor {
+  new (apiHost: string): HTTPClientInterface;
+}
+
+export interface HTTPClientInterface {
+  get<T>(path: string): Promise<T>
+}
