@@ -1,38 +1,37 @@
-import { HTTPClientConstructor } from './httpClient';
+import { HTTPClientInterface } from './httpClient';
 
-class FetchClient implements HTTPClientConstructor {
+export default class FetchClient implements HTTPClientInterface {
   private apiHost: string;
   
   constructor(apiHost: string) {
+    if (!apiHost) throw new Error('apiHost must be provide.');
     this.apiHost = apiHost;
   }
 
-  public async get<T>(path: string, init?: RequestInit): Promise<T> {
-    const requestInit = this.getRequestInit(init);
-    requestInit.method = 'GET';
-    const response = await fetch(path, requestInit);
-    return await response.json();
+  public async get<T>(path: string): Promise<T> {
+    const requestInit = this.getRequestInit('GET');
+    const request = new Request(this.apiHost + path, requestInit);
+    const response = await fetch(request);
+    return await this.parseResponse<T>(response);
   }
 
-  private getRequestInit = (requestOptions: RequestInit = {}) => {
-    const requestInit: Record<string, any> = mergeDeep(
-      {
-        mode: 'cors', // For cross-site request (https://assets.cdn.soomgo.com)
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-      requestOptions
-    );
+  // parse response by contentType
+  private async parseResponse<T>(response: Response): Promise<T> {
+    console.log('[parseResponse]' + {'content-type': response.headers.get('content-type')});
+    if (response.headers.get('content-type') === 'application/json') {
+      return await response.json();
+    }
+    return await response.text() as any;
+  }
+
+  private getRequestInit (method: RequestInit['method']): RequestInit {
+    const headers = new Headers()
+    headers.append('content-type', 'application/json');
+    const requestInit: RequestInit = {
+      method,
+      headers,
+      mode: 'cors', // For cross-site request (https://assets.cdn.soomgo.com)
+    };
     return requestInit;
   };
-  
-
-  private getHeaders(): RequestInit['headers'] {
-    return {
-      contentType: 'application/json',
-    }
-  }
 }
-
-export default new FetchClient('');
