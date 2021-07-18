@@ -1,8 +1,9 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { RequestFormModel } from '../models/RequestForm';
-import RequestFormItem from '../components/requestForm/RequestFormItem';
+import { RequestFormModel, RequestFormItemParam } from '../models/RequestForm';
+import RequestFormStep from '../components/requestForm/RequestFormStep';
 import SoomgoService from '../services/soomgoService';
+import { withPreventEvent } from '../hofs/dom';
 
 const useStyles = createUseStyles({
   container: {
@@ -10,14 +11,20 @@ const useStyles = createUseStyles({
     maxWidth: '640px',
     border: '1px solid #f0f0f0'
   },
-  pageTitle: {}
+  pageTitle: {},
+  requestFormStep: {
+    display: 'block'
+  }
 })
 
 const Reqeust = () => {
   const classes = useStyles();
   const [reqeustForm, setReqeustForm] = React.useState<RequestFormModel>();
-  const [selectedRequestFormItemIds, setSelectedRequestFormItemsIds] = React.useState(new Set());
-  
+  const [selectedRequestFormItemIds, setSelectedRequestFormItemsIds] = React.useState([]);
+  const [currentRequestFormStepIdx, setCurrentRequestFormStepIdx] = React.useState<number>(0);
+  const requestFormItemLength: number = reqeustForm ? reqeustForm.items.length : 0;
+  const isLastRequestFormStep: boolean = currentRequestFormStepIdx === (requestFormItemLength - 1);
+
   const getRequestForm = () => {
     (async () => {
       const response = await SoomgoService.getRequestForm('input_clean');
@@ -27,23 +34,70 @@ const Reqeust = () => {
     return () => {};
   };
 
+  const stepHelper = {
+    move(requestFormStepIdx: number) {
+      setCurrentRequestFormStepIdx(requestFormStepIdx);
+    },
+  }
+  
+  const handleFormChange = (itemId: number, optionIds: number[]) => {
+    console.log('Request@handleFormChange', {itemId, optionIds});
+  };
+  
+  const handleFormSubmit = (event: React.FormEvent) => {
+    console.log('[Request@handleFormSubmit]', event);
+  };
+
   React.useEffect(getRequestForm, []);
+
+
+  const stepOperationButton = (
+    <div>
+      <button 
+        type="button"
+        disabled={currentRequestFormStepIdx === 0}
+        onClick={withPreventEvent(() => stepHelper.move(currentRequestFormStepIdx - 1))}>
+        Back
+      </button>
+      {isLastRequestFormStep ? (
+        <button 
+          type="submit">
+          Submit
+        </button>
+      ) : (
+        <button 
+          type="button"
+          onClick={withPreventEvent(() => stepHelper.move(currentRequestFormStepIdx + 1))}>
+          Next
+        </button>
+      )}
+      <button 
+        type="button"
+        disabled={currentRequestFormStepIdx === 0}
+        onClick={withPreventEvent(() => stepHelper.move(0))}>
+        Restart
+      </button>
+    </div>
+  );
+
+  const mapRequestFormStep = (item: RequestFormItemParam) => (
+    <RequestFormStep
+      key={item.itemId}
+      item={item}
+      selectedOptionIds={selectedRequestFormItemIds}
+      onChange={(optionIds) => handleFormChange(item.itemId, optionIds)}
+    />
+  );
   
   return (
     <div className={classes.container}>
       <section>
         <h2 className={classes.pageTitle}>전문가에게 의뢰하기</h2>
         {!reqeustForm ? 'loading..' : (
-          <form action="/" method="post">
+          <form onSubmit={withPreventEvent(handleFormSubmit)}>
             <h3>{reqeustForm.title}</h3>
-            {reqeustForm.items.map(item => (
-              <fieldset key={item.itemId}>
-                <legend>{item.title}</legend>
-                <RequestFormItem key={item.itemId} item={item} />
-              </fieldset>
-            ))}
-            <button type="submit">제출하기</button>
-            {/* <output hidden id="val" name="val" htmlFor="a b"></output> */}
+            {reqeustForm.items.map(mapRequestFormStep)}
+            {stepOperationButton}
           </form>
         )}
       </section>

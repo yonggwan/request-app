@@ -1,5 +1,5 @@
 import React from 'react';
-import RequestContainer from './containers/Request';
+import Request from './containers/Request';
 import './App.css';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
         <span>soomgo</span>
         <img src="https://static.cdn.soomgo.com/static/img/home/index_soomgo_logo.svg" alt="Soomgo" />
       </h1>
-      <RequestContainer />
+      <Request />
     </div>
   );
 }
