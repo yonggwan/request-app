@@ -17,7 +17,7 @@ export default class FetchClient implements HTTPClientInterface {
 
   // parse response by contentType
   private async parseResponse<T>(response: Response): Promise<T> {
-    console.log('[parseResponse]' + {'content-type': response.headers.get('content-type')});
+    console.log('[parseResponse]', response);
     if (response.headers.get('content-type') === 'application/json') {
       return await response.json();
     }

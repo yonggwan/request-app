@@ -13,6 +13,10 @@ type APIResponseFailure<P> = {
   data?: P;
 };
 
+export interface HTTPClientConstructor {
+  new (apiHost: string): HTTPClientInterface;
+}
+
 export interface HTTPClientInterface {
   public get<T>(path: string): Promise<T>
 }
