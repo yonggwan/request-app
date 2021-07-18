@@ -1,21 +1,33 @@
 export type RequestFormKeys = 'input_clean' | 'input_lesson';
 
+export enum RequestFormTypeEnums {
+  checkbox = 'checkbox',
+  select = 'select',
+}
+
+
+export type RequestFormParam = {
+  formId: number,
+  title: string,
+  items: RequestFormItemParam[]
+}
+
 export class RequestFormModel {
-  private readonly formId: number = -1;
+  public readonly formId: number = 0;
   public title: string = '';
-  public items: Array<RequestFormItemParam>;
+  public items: Array<RequestFormItemModel>;
 
   constructor (params: RequestFormParam) {
     this.formId = params.formId;
     this.title = params.title;
-    this.items = params.items;
+    this.items = params.items.map(item => new RequestFormItemModel(item));
   }
 
-  public isSelectedForm(items: Array<RequestFormItemParam>): boolean {
+  public isSelectedForm(items: Array<RequestFormItemModel>): boolean {
     return items.every(this.isSelectedFormItem);
   }
 
-  public isSelectedFormItem(item: RequestFormItemParam): boolean {
+  public isSelectedFormItem(item: RequestFormItemModel): boolean {
     switch (item.formType) {
       case 'checkbox':
         // item.options.map(option => option.id)
@@ -41,16 +53,28 @@ export class RequestFormModel {
   }
 }
 
-export type RequestFormParam = {
-  formId: number,
-  title: string,
-  items: RequestFormItemParam[]
+export class RequestFormItemModel {
+  public readonly itemId: number = 0;
+  public title: string = '';
+  public formType: string = '';
+  public options: Array<{
+    id: number,
+    text: string
+  }>;
+
+  constructor (params: RequestFormItemParam) {
+    this.itemId = params.itemId;
+    this.title = params.title;
+    this.formType = params.formType;
+    this.options = params.options;
+  }
 }
+
 
 export type RequestFormItemParam = {
   itemId: number,
   title: string,
-  formType: 'checkbox' | 'select',
+  formType: RequestFormTypeEnums,
   options: Array<{
     id: number,
     text: string

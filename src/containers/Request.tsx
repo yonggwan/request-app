@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { RequestFormModel, RequestFormItemParam } from '../models/RequestForm';
+import { RequestFormModel, RequestFormItemModel } from '../models/RequestForm';
 import RequestFormStep from '../components/requestForm/RequestFormStep';
 import SoomgoService from '../services/soomgoService';
 import { withPreventEvent } from '../hofs/dom';
@@ -17,19 +17,28 @@ const useStyles = createUseStyles({
   }
 })
 
+
+
+
 const Reqeust = () => {
   const classes = useStyles();
   const [reqeustForm, setReqeustForm] = React.useState<RequestFormModel>();
-  const [selectedRequestFormItemIds, setSelectedRequestFormItemsIds] = React.useState(new Set<number>());
+  const [selectedRequestFormMap, setSelectedRequestFormMap] = React.useState<Map<RequestFormItemModel['itemId'], Set<number>>>(new Map());
   const [currentRequestFormStepIdx, setCurrentRequestFormStepIdx] = React.useState<number>(0);
   const requestFormItemLength: number = reqeustForm ? reqeustForm.items.length : 0;
   const isLastRequestFormStep: boolean = currentRequestFormStepIdx === (requestFormItemLength - 1);
 
   const getRequestForm = () => {
     (async () => {
-      const response = await SoomgoService.getRequestForm('input_clean');
-      console.log('[getRequestForm@response]', response)
-      setReqeustForm(new RequestFormModel(response));
+      let response = await SoomgoService.getRequestForm('input_clean');
+      console.log('[getRequestForm@response]', response);
+      // response.items = response.items.map(item => new RequestFormItemModel(item));
+      const requestFormModel = new RequestFormModel(response);
+      for (const item of requestFormModel.items) {
+        selectedRequestFormMap.set(item.itemId, new Set());
+      }
+      setReqeustForm(requestFormModel);
+      setSelectedRequestFormMap(selectedRequestFormMap);
     })();
     return () => {};
   };
@@ -40,10 +49,9 @@ const Reqeust = () => {
     },
   }
   
-  const handleFormChange = (itemId: number, optionIds: Set<number>) => {
-    console.log('Request@handleFormChange', {itemId, optionIds});
-    // todos... 
-    // setSelectedRequestFormItemsIds? ? ? ?? ?  ? ? ? ? ?(optionIds);
+  const handleFormChange = (item: RequestFormItemModel, optionIds: Set<number>) => {
+    console.log('Request@handleFormChange', {item, optionIds});
+    setSelectedRequestFormMap(selectedRequestFormMap.set(item.itemId, optionIds));
   };
   
   const handleFormSubmit = (event: React.FormEvent) => {
@@ -82,12 +90,12 @@ const Reqeust = () => {
     </div>
   );
 
-  const mapRequestFormStep = (item: RequestFormItemParam) => (
+  const mapRequestFormStep = (item: RequestFormItemModel) => (
     <RequestFormStep
       key={item.itemId}
       item={item}
-      selectedOptionIds={selectedRequestFormItemIds}
-      onChange={(optionIds) => handleFormChange(item.itemId, optionIds)}
+      selectedOptionIds={selectedRequestFormMap.get(item.itemId) as Set<number>}
+      onChange={(optionIds) => handleFormChange(item, optionIds)}
     />
   );
   

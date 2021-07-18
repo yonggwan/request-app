@@ -1,10 +1,10 @@
 import React from 'react';
-import { RequestFormItemParam } from "../../models/RequestForm";
+import { RequestFormItemModel } from "../../models/RequestForm";
 
 interface RequestFormItemProps {
-  item: RequestFormItemParam;
+  item: RequestFormItemModel;
   selectedOptionIds: Set<number>
-  onChange(itemOptionIds: Set<number>): void;
+  onChange(selectedOptionIds: Set<number>): void;
 }
 
 const RequestFormSelectItem = ({ item }: RequestFormItemProps) => {
@@ -21,6 +21,7 @@ const RequestFormSelectItem = ({ item }: RequestFormItemProps) => {
       <select
         name={item.title}
         data-item-id={item.itemId}
+        // value={selectedOptionIds}
         onChange={handleChange}>
         {item.options.map(option => (
           <option key={option.id} value={option.id}>{option.text}</option>

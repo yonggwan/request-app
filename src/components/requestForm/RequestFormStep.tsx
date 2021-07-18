@@ -1,25 +1,23 @@
 import React from 'react';
-import { RequestFormItemParam } from '../../models/RequestForm';
+import { RequestFormItemModel, RequestFormTypeEnums } from '../../models/RequestForm';
 import RequestFormCheckboxItem from './RequestFormCheckboxItem';
 import RequestFormSelectItem from './RequestFormSelectItem';
 
 interface RequestFormItemProps {
-  item: RequestFormItemParam;
+  item: RequestFormItemModel;
   selectedOptionIds: Set<number>;
-  onChange(itemOptionIds: Set<number>): void;
+  onChange(selectedOptionIds: Set<number>): void;
 }
 
 const RequestFormStep = ({ item, selectedOptionIds, onChange }: RequestFormItemProps) => {
-  const handleCheckboxChange = onChange;
-  const handleSelectChange = onChange;
-  
+
   return (
-    <fieldset key={item.itemId}>
+    <fieldset>
       <legend>{item.title}</legend>
-      {item.formType === 'checkbox' ? (
-        <RequestFormCheckboxItem item={item} onChange={handleCheckboxChange} selectedOptionIds={selectedOptionIds} />
-      ) : item.formType === 'select' ? 
-        <RequestFormSelectItem item={item} onChange={handleSelectChange} selectedOptionIds={selectedOptionIds}/> 
+      {item.formType === RequestFormTypeEnums.checkbox ? (
+        <RequestFormCheckboxItem item={item} onChange={onChange} selectedOptionIds={selectedOptionIds} />
+      ) : item.formType === RequestFormTypeEnums.select ? 
+        <RequestFormSelectItem item={item} onChange={onChange} selectedOptionIds={selectedOptionIds}/> 
         : null}
     </fieldset>
   )

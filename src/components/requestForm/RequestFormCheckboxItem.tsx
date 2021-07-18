@@ -1,10 +1,10 @@
 import React from 'react';
-import { RequestFormItemParam } from "../../models/RequestForm";
+import { RequestFormItemModel } from "../../models/RequestForm";
 
 interface RequestFormItemProps {
-  item: RequestFormItemParam;
+  item: RequestFormItemModel;
   selectedOptionIds: Set<number>
-  onChange(itemOptionIds: Set<number>): void;
+  onChange(selectedOptionIds: Set<number>): void;
 }
 
 const RequestFormCheckboxItem = ({ item, selectedOptionIds, onChange }: RequestFormItemProps) => {
@@ -12,8 +12,16 @@ const RequestFormCheckboxItem = ({ item, selectedOptionIds, onChange }: RequestF
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log('RequestFormCheckboxItem@handleChange', event);
     const value: number = Number(event.target.value);
-    onChange(event.target.checked ? selectedOptionIds.add(value): selectedOptionIds.add(value));
+    if (event.target.checked) {
+      selectedOptionIds.add(value)
+    } else {
+      selectedOptionIds.delete(value);
+    }
+    console.log(selectedOptionIds)
+    onChange(selectedOptionIds);
   };
+
+  console.log('passed selectedOptionIds', selectedOptionIds)
   
   return (
     <div>
