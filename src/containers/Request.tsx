@@ -18,6 +18,9 @@ const useStyles = createUseStyles<string, { active: boolean }>({
   pageTitle: {},
   stepPanelHide: {
     display: 'none'
+  },
+  codeBlock: {
+    fontSize: 12
   }
 })
 
@@ -56,7 +59,28 @@ const Reqeust = () => {
       stepHelper.move(0);
       setRequestStatus(RequestStatus.REDAY);
       setInitSelectedRequestFormItems((reqeustForm as RequestFormModel).items);
+    },
+    /**
+     * @todo 
+     */
+    validateMultipleStep(items: Array<RequestFormItemModel>): boolean {
+      return items.every(stepHelper.validateSingleleStep);
+    },
+    /**
+     * @todo
+     */
+     validateSingleleStep(item: RequestFormItemModel): boolean {
+      switch (item.formType) {
+        case 'checkbox':
+          // item.options.map(option => option.id)
+          return true;
+        case 'select':
+          return true;
+        default: 
+          return false;
+      }
     }
+
   };
 
   const getRequestForm = () => {
@@ -105,9 +129,12 @@ const Reqeust = () => {
     );
   }
   
-  const FinishView = (
+  const FinishView = (output: Record<string, any>) => (
     <div>
       <div>All Done!</div>
+      <div>
+        <pre className={classes.codeBlock}>{JSON.stringify(output, null, 2)}</pre>
+      </div>
       <RequestFromStepControl 
         restartControl={{ disable: false, onClick: stepHelper.restart}}
       />
@@ -120,8 +147,9 @@ const Reqeust = () => {
         <h2 className={classes.pageTitle}>전문가에게 의뢰하기</h2>
         {(requestStatus === RequestStatus.LOADING || requestStatus === RequestStatus.REQUESTED) ? 
           <ExceptionView title="Now Loading.." /> : 
-          requestStatus === RequestStatus.FINISHED ? FinishView :
-          reqeustForm ? (
+          reqeustForm ? 
+          requestStatus === RequestStatus.FINISHED ? <FinishView output={reqeustForm.output(selectedRequestFormItems)} /> : 
+          (
           <form onSubmit={withPreventEvent(stepHelper.finish)}>
             <h3>{reqeustForm.title}</h3>
             {reqeustForm.items.map(mapRequestFormStep)}

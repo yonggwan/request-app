@@ -23,33 +23,22 @@ export class RequestFormModel {
     this.items = params.items.map(item => new RequestFormItemModel(item));
   }
 
-  public isSelectedForm(items: Array<RequestFormItemModel>): boolean {
-    return items.every(this.isSelectedFormItem);
-  }
-
-  public isSelectedFormItem(item: RequestFormItemModel): boolean {
-    switch (item.formType) {
-      case 'checkbox':
-        // item.options.map(option => option.id)
-        return true;
-      case 'select':
-        return true;
-      default: 
-        return false;
+  public output(items?: Record<number, number[]>): any {
+    if (!items) return {};
+    const outputObj: any = {
+      id: this.formId,
+      items: []
+    };
+    
+    for (const [_itemId, optionIds] of Object.entries(items)) {
+      let currentItem: RequestFormItemModel = this.items.find(({ itemId }) => itemId === Number(_itemId)) as RequestFormItemModel;
+      const currentItemOptions = currentItem.options.filter(option => optionIds.includes(option.id))
+      outputObj.items.push({
+        id: currentItem.itemId,
+        answer: currentItemOptions.map(option => option.text).join(", ")
+      })
     }
-  }
-
-  public output() {
-    return {
-      "id": 1,
-      "items": [{
-        "id": 1,
-        "answer": "예시 답변입니다"
-      }, {
-        "id": 2,
-        "answer": "답변,여러개,예시답변,입니다"
-      }]
-    }
+    return outputObj;
   }
 }
 
