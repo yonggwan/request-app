@@ -16,20 +16,17 @@ const RequestFormSelectItem = ({ item, selectedOptionIds, onChange }: RequestFor
   };
   
   return (
-    <div>
-      <p>{item.title}</p>
-      <select
-        name={item.title}
-        data-item-id={item.itemId}
-        value={selectedOptionId}
-        defaultValue={-1}
-        onChange={handleChange}>
-        {/* <option key="default" defaultValue={-1} disabled>선택하세요.</option> */}
-        {item.options.map(option => (
-          <option key={option.id} value={option.id}>{option.text}</option>
-        ))}
-      </select>
-    </div>
+    <select
+      name={item.title}
+      data-item-id={item.itemId}
+      value={selectedOptionId}
+      defaultValue={-1}
+      onChange={handleChange}>
+      {/* <option key="default" defaultValue={-1} disabled>선택하세요.</option> */}
+      {item.options.map(option => (
+        <option key={option.id} value={option.id}>{option.text}</option>
+      ))}
+    </select>
   )
 }
 

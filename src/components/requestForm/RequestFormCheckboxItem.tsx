@@ -20,8 +20,7 @@ const RequestFormCheckboxItem = ({ item, selectedOptionIds, onChange }: RequestF
   };
 
   return (
-    <div>
-      <p>{item.title}</p>
+    <React.Fragment>
       {item.options.map(option => (
         <label key={option.id}>
           <input
@@ -35,7 +34,7 @@ const RequestFormCheckboxItem = ({ item, selectedOptionIds, onChange }: RequestF
           <span>{option.text}</span>
         </label>
       ))}
-    </div>
+    </React.Fragment>
   )
 }
 
