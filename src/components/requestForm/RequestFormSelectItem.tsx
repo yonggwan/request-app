@@ -1,18 +1,18 @@
 import React from 'react';
-import { RequestFormItemModel } from "../../models/RequestForm";
+import { RequestFormItemModel } from '../../models/RequestForm';
 
 interface RequestFormItemProps {
   item: RequestFormItemModel;
-  selectedOptionIds: Set<number>
-  onChange(selectedOptionIds: Set<number>): void;
+  selectedOptionIds: Array<number>
+  onChange(selectedOptionIds: Array<number>): void;
 }
 
-const RequestFormSelectItem = ({ item }: RequestFormItemProps) => {
-  
+const RequestFormSelectItem = ({ item, selectedOptionIds, onChange }: RequestFormItemProps) => {
+  const selectedOptionId = selectedOptionIds.pop();
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     console.log('RequestFormSelectItem@handleChange', event);
-    const value: number = Number(event.target.value);
-    // onChange(event.target.checked ? selectedOptionIds.add(value): selectedOptionIds.add(value));
+    const optionId: number = Number(event.target.value);
+    onChange([optionId]);
   };
   
   return (
@@ -21,8 +21,10 @@ const RequestFormSelectItem = ({ item }: RequestFormItemProps) => {
       <select
         name={item.title}
         data-item-id={item.itemId}
-        // value={selectedOptionIds}
+        value={selectedOptionId}
+        defaultValue={-1}
         onChange={handleChange}>
+        {/* <option key="default" defaultValue={-1} disabled>선택하세요.</option> */}
         {item.options.map(option => (
           <option key={option.id} value={option.id}>{option.text}</option>
         ))}

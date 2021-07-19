@@ -1,28 +1,24 @@
 import React from 'react';
-import { RequestFormItemModel } from "../../models/RequestForm";
+import { RequestFormItemModel } from '../../models/RequestForm';
 
 interface RequestFormItemProps {
   item: RequestFormItemModel;
-  selectedOptionIds: Set<number>
-  onChange(selectedOptionIds: Set<number>): void;
+  selectedOptionIds: Array<number>
+  onChange(selectedOptionIds: Array<number>): void;
 }
 
 const RequestFormCheckboxItem = ({ item, selectedOptionIds, onChange }: RequestFormItemProps) => {
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log('RequestFormCheckboxItem@handleChange', event);
-    const value: number = Number(event.target.value);
-    if (event.target.checked) {
-      selectedOptionIds.add(value)
-    } else {
-      selectedOptionIds.delete(value);
-    }
-    console.log(selectedOptionIds)
-    onChange(selectedOptionIds);
+    const optionId: number = Number(event.target.value);
+    const optionIds = [...selectedOptionIds];
+    if (event.target.checked) 
+      optionIds.push(optionId)
+    else 
+      optionIds.splice(selectedOptionIds.findIndex(id => id === optionId), 1)
+    onChange(optionIds);
   };
 
-  console.log('passed selectedOptionIds', selectedOptionIds)
-  
   return (
     <div>
       <p>{item.title}</p>
@@ -32,7 +28,7 @@ const RequestFormCheckboxItem = ({ item, selectedOptionIds, onChange }: RequestF
             type="checkbox"
             value={option.id}
             onChange={handleChange}
-            checked={selectedOptionIds.has(option.id)}
+            checked={selectedOptionIds.includes(option.id)}
             data-item-id={item.itemId} 
             data-option-id={option.id} 
           />
