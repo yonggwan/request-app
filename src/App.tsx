@@ -6,8 +6,7 @@ function App() {
   return (
     <div id="app-container">
       <h1 className="app-name">
-        <span>soomgo</span>
-        <img src="https://static.cdn.soomgo.com/static/img/home/index_soomgo_logo.svg" alt="Soomgo" />
+        <span>Request</span>
       </h1>
       <Request />
     </div>

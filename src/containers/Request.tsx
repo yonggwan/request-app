@@ -5,7 +5,7 @@ import RequestFormStepPanel from '../components/requestForm/RequestFormStepPanel
 import RequestFormCheckboxItem from '../components/requestForm/RequestFormCheckboxItem';
 import RequestFormSelectItem from '../components/requestForm//RequestFormSelectItem';
 import RequestFromStepControl from '../components/requestForm//RequestFromStepControl';
-import SoomgoService from '../services/soomgoService';
+import RequestService from '../services/requestService';
 import { withPreventEvent } from '../hofs/dom';
 import ExceptionView from '../components/ExceptionView';
 
@@ -85,7 +85,7 @@ const Reqeust = () => {
 
   const getRequestForm = () => {
     (async () => {
-      let response = await SoomgoService.getRequestForm('input_clean');
+      let response = await RequestService.getRequestForm('input_clean');
       console.log('[getRequestForm@response]', response);
       const requestFormModel = new RequestFormModel(response);
       setInitSelectedRequestFormItems(requestFormModel.items);
