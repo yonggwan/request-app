@@ -1,4 +1,4 @@
-export type RequestFormKeys = 'input_clean' | 'input_lesson';
+export type RequestFormKeys = 'input_clean' | 'input_lesson' | 'input_simbureum';
 
 export enum RequestFormTypeEnums {
   checkbox = 'checkbox',

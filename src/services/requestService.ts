@@ -3,6 +3,7 @@ import { RequestFormParam, RequestFormKeys } from "../models/RequestForm";
 import FetchClient from "../utils/fetchClient";
 import input_clean from '../mocks/input_clean.json';
 import input_lesson from '../mocks/input_lesson.json';
+import input_simbureum from '../mocks/input_simbureum.json';
 
 class RequestService {
   private httpClient: HTTPClientInterface;
@@ -18,7 +19,7 @@ class RequestService {
   }
 
   public async getRequestFormMock(formKey: RequestFormKeys): Promise<RequestFormParam> {
-    const mockMap = { input_clean, input_lesson } as Record<RequestFormKeys, RequestFormParam>;
+    const mockMap = { input_clean, input_lesson, input_simbureum } as Record<RequestFormKeys, RequestFormParam>;
     return await new Promise((resolve) => resolve(mockMap[formKey]));
   }
 }

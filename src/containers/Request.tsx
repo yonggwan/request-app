@@ -85,7 +85,7 @@ const Reqeust = () => {
 
   const getRequestForm = () => {
     (async () => {
-      let response = await RequestService.getRequestForm('input_clean');
+      let response = await RequestService.getRequestForm('input_simbureum');
       console.log('[getRequestForm@response]', response);
       const requestFormModel = new RequestFormModel(response);
       setInitSelectedRequestFormItems(requestFormModel.items);
