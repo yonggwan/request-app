@@ -4,17 +4,16 @@ import FetchClient from "../utils/fetchClient";
 import input_clean from '../mocks/input_clean.json';
 import input_lesson from '../mocks/input_lesson.json';
 
-const isMockTest = true;
-
 class RequestService {
   private httpClient: HTTPClientInterface;
   
   constructor (httpClient: HTTPClientConstructor) {
-    this.httpClient = new httpClient('https://assets.cdn.soomgo.com');
+    if (!process.env.REACT_APP_REQUEST_SERVICE_API_HOST) throw new Error('REQUEST_SERVICE_API_HOST is not provided');
+    this.httpClient = new httpClient(process.env.REACT_APP_REQUEST_SERVICE_API_HOST);
   }
 
   public async getRequestForm(formKey: RequestFormKeys): Promise<RequestFormParam> {
-    if (isMockTest) return this.getRequestFormMock(formKey);
+    if (process.env.REACT_APP_DEBUG === 'true') return this.getRequestFormMock(formKey);
     return await this.httpClient.get<RequestFormParam>(`/data/exam/mock/${formKey}.json`);
   }
 

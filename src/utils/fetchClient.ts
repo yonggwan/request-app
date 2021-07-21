@@ -30,7 +30,7 @@ export default class FetchClient implements HTTPClientInterface {
     const requestInit: RequestInit = {
       method,
       headers,
-      mode: 'cors', // For cross-site request (https://assets.cdn.soomgo.com)
+      mode: 'cors', // For cross-site request
     };
     return requestInit;
   };
